@@ -9,10 +9,12 @@ start_time = cmds.playbackOptions(query=True, minTime=True)
 def create_sequence_of_pngs(path, file_name, width1, height1):
     """
     Args:
-        path(str): stores the name of the folder you want to store your pngs in
-        file_name(str): stores the name of the file for each png
-        width(int): the horizontal size of the image
-        height(int): the vertical size of the image
+    
+        path (str): The path to the folder you want to store your pngs in
+        file_name (str): The name of the file for each png
+        width (int): The horizontal size of the image
+        height (int): The vertical size of the image
+
     """
 
     full_file_name = f"{path}\\{file_name}"
