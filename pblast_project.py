@@ -5,6 +5,7 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
     """ This function creates a sequences of png images based on the input of the user
     Args:
 <<<<<<< HEAD
+<<<<<<< HEAD
         dir_path (str): The path to the folder you want to store your pngs in
         file_name (str): The name of the file for each png
         width (int): The horizontal size of the image
@@ -24,10 +25,14 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
 
     full_file_name = os.path.join(dir_path, file_name)
 =======
+=======
+    
+>>>>>>> 3753bb2af318ee277c792200c8c9189db7fd519e
         path (str): The path to the folder you want to store your pngs in
         file_name (str): The name of the file for each png
         width (int): The horizontal size of the image
         height (int): The vertical size of the image
+
     """
 >>>>>>> 0097ac1b461f46fb5f1b405193f6bba5810d1d48
 
