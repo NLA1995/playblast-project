@@ -1,21 +1,28 @@
 import maya.cmds as cmds
+import os
+def create_png_sequence(dir_path, file_name, width, height, start_time=None, end_time=None):
 
-# get the last frame of the timeline
-end_time = cmds.playbackOptions(query=True, maxTime=True)
-
-# get the first frame of the timeline
-start_time = cmds.playbackOptions(query=True, minTime=True)
-
-def create_sequence_of_pngs(path, file_name, width1, height1):
-    """
+    """ This function creates a sequences of png images based on the input of the user
     Args:
-        path(str): stores the name of the folder you want to store your pngs in
-        file_name(str): stores the name of the file for each png
-        width(int): the horizontal size of the image
-        height(int): the vertical size of the image
-    """
+        dir_path (str): The path to the folder you want to store your pngs in
+        file_name (str): The name of the file for each png
+        width (int): The horizontal size of the image
+        height (int): The vertical size of the image
+        start_time(int): The start point  from timeline where export begins
+        end_time (int): The end point in time line where export ends
 
-    full_file_name = f"{path}\\{file_name}"
+    Returns: the value of cmds.playblast
+    """
+    # get the last frame of the timeline
+    if end_time is None:
+        end_time = cmds.playbackOptions(query=True, maxTime=True)
+
+    # get the first frame of the timeline
+    if start_time is None:
+        start_time = cmds.playbackOptions(query=True, minTime=True)
+
+    full_file_name = os.path.join(dir_path, file_name)
+
     cmds.playblast(
         format='image',          # Output format: 'avi', 'qt', 'movie', etc.
         filename=full_file_name, # Output file path
@@ -29,8 +36,9 @@ def create_sequence_of_pngs(path, file_name, width1, height1):
         framePadding=4,          # Number of digits in the frame number
         startTime=start_time,    # Start frame
         endTime=end_time,        # End frame
-        widthHeight=(width1, height1)  # Resolution of the playblast
+        widthHeight=(width, height)  # Resolution of the playblast
     )
 
-# Example usage
-create_sequence_of_pngs(r"C:\Users\Natalia\Desktop\prueba", "prueba", 1280, 720)
+    return cmds.playblast
+
+
