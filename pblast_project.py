@@ -1,5 +1,7 @@
 import maya.cmds as cmds
 import os
+
+
 def create_png_sequence(dir_path, file_name, width, height, start_time=None, end_time=None):
 
     """ This function creates a sequences of png images based on the input of the user
@@ -9,10 +11,11 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
         file_name (str): The name of the file for each png
         width (int): The horizontal size of the image
         height (int): The vertical size of the image
-        start_time(int): The start point  from timeline where export begins
-        end_time (int): The end point in time line where export ends
+        start_time (int): The start point from timeline where export begins
+        end_time (int): The end point in timeline where export ends
 
-    Returns: the value of cmds.playblast
+    Returns:
+         str: The path to the image sequence
     """
     # get the last frame of the timeline
     if end_time is None:
@@ -24,7 +27,7 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
 
     full_file_name = os.path.join(dir_path, file_name)
 
-    cmds.playblast(
+    playblast_path = cmds.playblast(
         format='image',          # Output format: 'avi', 'qt', 'movie', etc.
         filename=full_file_name, # Output file path
         compression='png',       # Compression type: 'none', 'avi', 'h264', etc.
@@ -40,6 +43,4 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
         widthHeight=(width, height)  # Resolution of the playblast
     )
 
-    return cmds.playblast
-
-
+    return playblast_path
