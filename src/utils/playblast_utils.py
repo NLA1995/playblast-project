@@ -44,3 +44,26 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
     )
 
     return playblast_path
+
+def format_sequence_path(playblast_path):
+
+    """This is a function that exchanges the #### given by maya into a format ffmpeg can manage
+
+    Args:
+        playblast_path (str): The path where the image sequence lives
+
+    Returns:
+        str: A new string with a .%04d. in the middle of the name instead of the ####
+    """
+
+    # Use a regular expression to split the path
+    split_path = playblast_path.split('.')
+
+    # The parts before, the #### part, and the parts after
+    before_part = split_path[0]  # C:\Users\Natalia\Desktop\prueba\prueba
+    number_of_padding = split_path[1].count("#")
+    middle_part = f'.%0{str(number_of_padding)}d.'
+    after_part = split_path[2]  # png
+
+    formatted_path = f"{before_part}{middle_part}{after_part}"
+    return formatted_path
