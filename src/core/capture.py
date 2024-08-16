@@ -4,14 +4,13 @@ from utils.playblast_utils import create_png_sequence
 from utils.playblast_utils import format_sequence_path
 from utils.ffmpeg_utils import video_from_sequence
 
-class PlayblastManager:
 
+class PlayblastManager:
     def __init__(self):
         # List to store the paths of exported videos
         self.exported = []
 
-
-    def do_playblast(self, dir_path, name_for_sequence, file_name, width, height, start_frame, end_frame):
+    def do_playblast(self, dir_path, file_name, width, height, start_frame, end_frame):
 
         """This function creates a playblast in Maya's viewport and outputs a video
 
@@ -32,13 +31,13 @@ class PlayblastManager:
         # Construct the full path for the exported file
         file_path = os.path.join(dir_path, f"{file_name}.mov")
 
-        png_sequence = create_png_sequence(dir_path, name_for_sequence, width, height, start_frame, end_frame)
+        png_sequence = create_png_sequence(dir_path, file_name, width, height, start_frame, end_frame)
+        print(png_sequence)
 
         format_path = format_sequence_path(png_sequence)
+        print(format_path)
 
         video_from_sequence(format_path, file_path, start_frame)
-
-
 
         # Check if the file was successfully created and add it to the list
         if os.path.exists(file_path):
