@@ -1,10 +1,10 @@
 import os
 from os.path import join, dirname
 
-
 # Define repository path via environment variable
 repo_path = dirname(dirname(dirname(__file__)))
 EXECUTABLE = join(repo_path, 'bin', 'ffmpeg', 'bin', 'ffmpeg.exe')
+
 
 def video_from_sequence(formatted_path, output_video, start_frame=None):
 
@@ -24,3 +24,13 @@ def video_from_sequence(formatted_path, output_video, start_frame=None):
 
     if not os.path.exists(output_video):
         raise RuntimeError(f"Failed to create video from sequence path: {formatted_path}")
+
+def create_black_bar(output_file_path):
+   run_2 = f"{EXECUTABLE} -f lavfi -i color=black:1920x80:d=3,format=rgb24 -frames:v 1 {output_file_path}"
+   os.system(run_2)
+
+
+def create_water_mark(input_video_path, black_bar_path, output_video_path):
+   run_3 = (f"{EXECUTABLE} -i {input_video_path} -i {black_bar_path} -i {black_bar_path} "
+            f"-y -filter_complex [1]lut=a=val*0.1[bar1];[2]lut=a=val*0.1[bar2];[0][bar1]overlay=x=(W-w)/2:y=0[video_with_top];[video_with_top][bar2]overlay=x=(W-w)/2:y=H-h {output_video_path}")
+   os.system(run_3)
