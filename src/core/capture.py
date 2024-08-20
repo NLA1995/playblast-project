@@ -13,7 +13,7 @@ class PlayblastManager:
         # List to store the paths of exported videos
         self.exported = []
 
-    def do_playblast(self, dir_path, file_name, water_mark, width, height, start_frame, end_frame):
+    def do_playblast(self, dir_path, file_name, watermark, width, height, start_frame, end_frame):
 
         """This function creates a playblast in Maya's viewport and outputs a video
 
@@ -33,8 +33,8 @@ class PlayblastManager:
 
         # Construct the full path for the exported file
         file_path = os.path.join(dir_path, f"{file_name}.mov")
-        file_path_2 = os.path.join(dir_path, "black_bar.png")
-        file_path_3 = os.path.join(dir_path, f"{water_mark}.mov")
+        path_to_black_bar = os.path.join(dir_path, "black_bar.png")
+        path_to_watermark = os.path.join(dir_path, f"{watermark}.mov")
 
         png_sequence = create_png_sequence(dir_path, file_name, width, height, start_frame, end_frame)
 
@@ -42,14 +42,14 @@ class PlayblastManager:
 
         video_from_sequence(format_path, file_path, start_frame)
 
-        create_black_bar(file_path_2)
+        create_black_bar(path_to_black_bar, width)
 
-        create_water_mark(file_path, file_path_2, file_path_3)
+        create_water_mark(file_path, path_to_black_bar, path_to_watermark)
 
 
         # Check if the file was successfully created and add it to the list
-        if os.path.exists(file_path_3):
-            self.exported.append(file_path_3)
-            print(f"Exported playblast: {file_path_3}")
+        if os.path.exists(path_to_watermark):
+            self.exported.append(path_to_watermark)
+            print(f"Exported playblast: {path_to_watermark}")
         else:
             print("Error while making playblast: the file was not created.")

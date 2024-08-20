@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QApplication, QWidget, QFormLayout, QLabel, QLineEdit, QHBoxLayout, QVBoxLayout, QPushButton
 
-class MyWindow(QWidget):
+
+class PlayblastManager(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -16,15 +17,19 @@ class MyWindow(QWidget):
         line_edit = QLineEdit()
         form_layout.addRow(first_row, line_edit)
 
+        # Second row
+        second_row = QLabel("Frame rate:")
+        line_edit_3 = QLineEdit()
+        form_layout.addRow(second_row, line_edit_3)
+
         # Define the labels and corresponding QLineEdits
-        labels = [
+        settings_labels = [
             "Size:",
-            "Frame rate:",
             "Frame range:",
         ]
 
         # Add QLabel and two QLineEdit widgets side by side for each label
-        for label_name in labels:
+        for label_name in settings_labels:
             label = QLabel(label_name)
             line_edit1 = QLineEdit()
             line_edit2 = QLineEdit()
@@ -36,6 +41,11 @@ class MyWindow(QWidget):
 
             # Add the label and the horizontal layout to the form layout
             form_layout.addRow(label, hbox_layout)
+
+        # Second row
+        file_row = QLabel("File:")
+        line_edit_4 = QLineEdit()
+        form_layout.addRow(file_row, line_edit_4)
 
         # Create the "Browse" button
         browse_button = QPushButton("Browse")
@@ -52,14 +62,14 @@ class MyWindow(QWidget):
         self.setLayout(form_layout)
 
         # Define the labels and corresponding QLineEdits
-        labels_2 = [
+        review_labels = [
             "Artist Name:",
             "Department:",
             "Company Name:",
         ]
 
         # Add QLabel and two QLineEdit widgets side by side for each label
-        for label_name_2 in labels_2:
+        for label_name_2 in review_labels:
             label_2 = QLabel(label_name_2)
             line_edit3 = QLineEdit()
 
@@ -83,7 +93,7 @@ class MyWindow(QWidget):
 
 if __name__ == "__main__":
     app = QApplication([])
-    window = MyWindow()
+    window = PlayblastManager()
     window.show()
     app.exec()
 
