@@ -8,12 +8,12 @@ EXECUTABLE = join(repo_path, 'bin', 'ffmpeg', 'bin', 'ffmpeg.exe')
 
 def video_from_sequence(formatted_path, output_video, start_frame=None):
 
-    """This function creates a video based on a sequence of images
+    """This function creates a video based on a sequence of images.
 
     Args:
-        formatted_path (str): The necessary path to output the video
-        output_video (str): The location where we want the video stored
-        start_frame (int): The point from when we want the video to start
+        formatted_path (str): The necessary path to output the video.
+        output_video (str): The location where we want the video stored.
+        start_frame (int): The point from when we want the video to start.
 
     """
 

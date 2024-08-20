@@ -15,15 +15,15 @@ class PlayblastManager:
 
     def do_playblast(self, dir_path, file_name, water_mark, width, height, start_frame, end_frame):
 
-        """This function creates a playblast in Maya's viewport and outputs a video
+        """This function creates a playblast in Maya's viewport and outputs a video.
 
         Args:
-            dir_path (str): The folder where the video will be stored
-            file_name (str): The name of the file
-            width (int): The horizontal size of the video
-            height (int): The vertical size of the video
-            start_frame (int): The frame from where the video will start
-            end_frame (int): The frame where the video ends
+            dir_path (str): The folder where the video will be stored.
+            file_name (str): The name of the file.
+            width (int): The horizontal size of the video.
+            height (int): The vertical size of the video.
+            start_frame (int): The frame from where the video will start.
+            end_frame (int): The frame where the video ends.
 
         """
 
