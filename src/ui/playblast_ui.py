@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QApplication, QWidget, QFormLayout, QLabel, QLineEdit, QHBoxLayout, QVBoxLayout, QPushButton
 
 
-class PlayblastManager(QWidget):
+class PlayblastManagerUI(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -14,13 +14,13 @@ class PlayblastManager(QWidget):
 
         # First row
         first_row = QLabel("Name of playblast:")
-        line_edit = QLineEdit()
-        form_layout.addRow(first_row, line_edit)
+        name_line_edit = QLineEdit()
+        form_layout.addRow(first_row, name_line_edit)
 
         # Second row
         second_row = QLabel("Frame rate:")
-        line_edit_3 = QLineEdit()
-        form_layout.addRow(second_row, line_edit_3)
+        rate_line_edit = QLineEdit()
+        form_layout.addRow(second_row, rate_line_edit)
 
         # Define the labels and corresponding QLineEdits
         settings_labels = [
@@ -43,9 +43,9 @@ class PlayblastManager(QWidget):
             form_layout.addRow(label, hbox_layout)
 
         # Second row
-        file_row = QLabel("File:")
-        line_edit_4 = QLineEdit()
-        form_layout.addRow(file_row, line_edit_4)
+        file_row = QLabel("Export Directory:")
+        directory_line_edit = QLineEdit()
+        form_layout.addRow(file_row, directory_line_edit)
 
         # Create the "Browse" button
         browse_button = QPushButton("Browse")
