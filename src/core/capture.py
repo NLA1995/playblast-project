@@ -13,7 +13,8 @@ class PlayblastManager:
     def __init__(self):
         # List to store the paths of exported videos
         self.exported = []
-
+        # Create temporary folder
+        self.temp_dir = tempfile.mkdtemp(prefix='playblast_')
 
     def do_playblast(self, dir_name, file_name, width, height, start_frame, end_frame):
 
@@ -28,12 +29,6 @@ class PlayblastManager:
             end_frame (int): The frame where the video ends
 
         """
-        # Create temporary folder
-        self.temp_dir = tempfile.mkdtemp(prefix='playblast_')
-
-        # Ensure the export directory exists
-        if not os.path.exists(self.temp_dir):
-            os.makedirs(self.temp_dir)
 
         # Construct the full path for the exported file
         file_path = os.path.join(self.temp_dir, "no_watermark.mov")

@@ -27,7 +27,7 @@ def video_from_sequence(formatted_path, output_video, start_frame=None):
 
 
 def create_black_bar(output_file_path, width):
-    """ This function creates black bars in both upper and lower extremes of the video
+    """ This function creates a file with a black bar
 
     Args:
         output_file_path: The name of the path where the black bar will be stored
@@ -39,7 +39,7 @@ def create_black_bar(output_file_path, width):
 
 
 def create_water_mark(input_video_path, black_bar_path, output_video_path):
-    """
+    """ This function creates 2 watermarks on the top and buttom of the video.
 
     Args:
         input_video_path: The path of the initial video without the watermark
