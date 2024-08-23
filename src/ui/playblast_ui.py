@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QApplication, QWidget, QFormLayout, QLabel, QLineE
 
 
 class PlayblastManagerUI(QWidget):
+
     def __init__(self):
         super().__init__()
 
@@ -21,6 +22,7 @@ class PlayblastManagerUI(QWidget):
         second_row = QLabel("Frame rate:")
         rate_line_edit = QLineEdit()
         form_layout.addRow(second_row, rate_line_edit)
+
 
         # Define the labels and corresponding QLineEdits
         settings_labels = [
@@ -53,7 +55,6 @@ class PlayblastManagerUI(QWidget):
         # Create a horizontal layout to center the button
         button_layout = QHBoxLayout()
         button_layout.addWidget(browse_button)
-
 
         # Add the button layout to the form layout (so it appears just below the inputs)
         form_layout.addRow(button_layout)
@@ -96,4 +97,3 @@ if __name__ == "__main__":
     window = PlayblastManagerUI()
     window.show()
     app.exec()
-

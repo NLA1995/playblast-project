@@ -5,6 +5,7 @@ from utils.playblast_utils import format_sequence_path
 from utils.ffmpeg_utils import video_from_sequence
 from utils.ffmpeg_utils import create_black_bar
 from utils.ffmpeg_utils import create_water_mark
+import tempfile
 
 
 
@@ -12,13 +13,15 @@ class PlayblastManager:
     def __init__(self):
         # List to store the paths of exported videos
         self.exported = []
+        # Create temporary folder
+        self.temp_dir = tempfile.mkdtemp(prefix='playblast_')
 
-    def do_playblast(self, dir_path, file_name, watermark, width, height, start_frame, end_frame):
+    def do_playblast(self, dir_name, file_name, width, height, start_frame, end_frame):
 
         """This function creates a playblast in Maya's viewport and outputs a video
 
         Args:
-            dir_path (str): The folder where the video will be stored
+            dir_name (str) : The folder where the video with watermarks will be stored
             file_name (str): The name of the file
             width (int): The horizontal size of the video
             height (int): The vertical size of the video
@@ -27,16 +30,12 @@ class PlayblastManager:
 
         """
 
-        # Ensure the export directory exists
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
-
         # Construct the full path for the exported file
-        file_path = os.path.join(dir_path, f"{file_name}.mov")
-        path_to_black_bar = os.path.join(dir_path, "black_bar.png")
-        path_to_watermark = os.path.join(dir_path, f"{watermark}.mov")
+        file_path = os.path.join(self.temp_dir, "no_watermark.mov")
+        path_to_black_bar = os.path.join(self.temp_dir, "black_bar.png")
+        path_to_watermark = os.path.join(dir_name, f"{file_name}.mov")
 
-        png_sequence = create_png_sequence(dir_path, file_name, width, height, start_frame, end_frame)
+        png_sequence = create_png_sequence(self.temp_dir, file_name, width, height, start_frame, end_frame)
 
         format_path = format_sequence_path(png_sequence)
 
