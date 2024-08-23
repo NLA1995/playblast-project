@@ -1,22 +1,34 @@
-from PySide6.QtWidgets import QApplication, QWidget, QFormLayout, QLabel, QLineEdit, QHBoxLayout, QVBoxLayout, QPushButton
+from PySide6.QtWidgets import QApplication, QWidget, QFormLayout, QLabel, QLineEdit, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow
 from core.capture import PlayblastManager
 from shiboken6 import wrapInstance
 from maya import OpenMayaUI
 
 
 def get_maya_window():
+    """Get pointed to Maya's main window to use as parent
+
+    Returns:
+        QWidget: QWidget representing Maya's main window
+    """
     main_window_ptr = OpenMayaUI.MQtUtil.mainWindow()
     return wrapInstance(int(main_window_ptr), QWidget)
 
 
-class PlayblastManagerUI(QWidget):
+class PlayblastManagerUI(QMainWindow):
 
     def __init__(self, parent=get_maya_window()):
-        super().__init__(parent = parent)
-
+        super().__init__(parent=parent)
         # Configure the window
         self.setWindowTitle("Playblast Manager")
         self.setGeometry(300, 300, 500, 250)
+        self.main_widget = PlayblastManagerWidget()
+        self.setCentralWidget(self.main_widget)
+
+
+class PlayblastManagerWidget(QWidget):
+
+    def __init__(self, parent=None):
+        super().__init__(parent = parent)
 
         # Initialize the form layout
         form_layout = QFormLayout()
@@ -30,8 +42,6 @@ class PlayblastManagerUI(QWidget):
         second_row = QLabel("Frame rate:")
         rate_line_edit = QLineEdit()
         form_layout.addRow(second_row, rate_line_edit)
-
-
 
         third_row = QLabel("Size:")
         self.width_line_edit = QLineEdit()
@@ -109,7 +119,6 @@ class PlayblastManagerUI(QWidget):
         # Signals
         self.playblast_button.clicked.connect(self.do_playblast)
 
-
     def do_playblast(self):
         playblast_mgr = PlayblastManager()
 
@@ -128,6 +137,7 @@ class PlayblastManagerUI(QWidget):
         print(f"end_frame {end_frame}")
 
         playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), int(start_frame), int(end_frame))
+
 
 if __name__ == "__main__":
     app = QApplication([])
