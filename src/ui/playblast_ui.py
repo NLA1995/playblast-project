@@ -93,7 +93,7 @@ class PlayblastManagerUI(QWidget):
 
 if __name__ == "__main__":
     app = QApplication([])
-    window = PlayblastManager()
+    window = PlayblastManagerUI()
     window.show()
     app.exec()
 
