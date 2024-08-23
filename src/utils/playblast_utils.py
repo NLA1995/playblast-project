@@ -17,6 +17,7 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
     Returns:
          str: The path to the image sequence
     """
+
     # get the last frame of the timeline
     if end_time is None:
         end_time = cmds.playbackOptions(query=True, maxTime=True)
