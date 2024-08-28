@@ -26,7 +26,7 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
     if start_time is None:
         start_time = cmds.playbackOptions(query=True, minTime=True)
 
-    full_file_name = os.path.join(dir_path, file_name)
+    full_file_name = os.path.join(dir_path, file_name.replace(" ", ""))
 
     playblast_path = cmds.playblast(
         format='image',          # Output format: 'avi', 'qt', 'movie', etc.
@@ -61,10 +61,11 @@ def format_sequence_path(playblast_path):
     split_path = playblast_path.split('.')
 
     # The parts before, the #### part, and the parts after
-    before_part = split_path[0]  # C:\Users\Natalia\Desktop\prueba\prueba
+    before_part = split_path[0].replace(" ", "")  # C:\Users\Natalia\Desktop\prueba\prueba
     number_of_padding = split_path[1].count("#")
     middle_part = f'.%0{str(number_of_padding)}d.'
     after_part = split_path[2]  # png
 
     formatted_path = f"{before_part}{middle_part}{after_part}"
+
     return formatted_path
