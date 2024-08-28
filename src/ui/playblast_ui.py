@@ -182,8 +182,11 @@ class PlayblastManagerWidget(QWidget):
         print(f"department_name {department_name}")
         print(f"company_name {company_name}")
 
+        try:
+            playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), int(frame_rate), int(start_frame), int(end_frame), artist_name, department_name, company_name)
+        except(ValueError):
+            cmds.inViewMessage(amg='<hl>please provide all the information</hl>.', pos='topCenter', fade=True)
 
-        playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), int(frame_rate), int(start_frame), int(end_frame), artist_name, department_name, company_name)
 
 
 if __name__ == "__main__":
