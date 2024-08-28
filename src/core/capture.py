@@ -31,6 +31,7 @@ class PlayblastManager:
             end_frame (int): The frame where the video ends
 
         """
+        file_name = file_name.replace(" ", "")
 
         # Construct the full path for the exported file
         file_path = os.path.join(self.temp_dir, "no_watermark.mov")
@@ -58,8 +59,8 @@ class PlayblastManager:
 
 
         # Check if the file was successfully created and add it to the list
-        if os.path.exists(path_to_watermark):
-            self.exported.append(path_to_watermark)
-            print(f"Exported playblast: {path_to_watermark}")
+        if os.path.exists(path_to_frame_count):
+            self.exported.append(path_to_frame_count)
+            print(f"Exported playblast: {path_to_frame_count}")
         else:
             print("Error while making playblast: the file was not created.")
