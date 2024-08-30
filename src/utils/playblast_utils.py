@@ -61,7 +61,7 @@ def format_sequence_path(playblast_path):
     split_path = playblast_path.split('.')
 
     # The parts before, the #### part, and the parts after
-    before_part = split_path[0].replace(" ", "")  # C:\Users\Natalia\Desktop\prueba\prueba
+    before_part = split_path[0].replace(" ", "_")  # C:\Users\Natalia\Desktop\prueba\prueba
     number_of_padding = split_path[1].count("#")
     middle_part = f'.%0{str(number_of_padding)}d.'
     after_part = split_path[2]  # png
