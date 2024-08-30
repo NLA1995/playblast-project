@@ -47,7 +47,7 @@ class PlayblastManager:
 
         format_path = format_sequence_path(png_sequence)
 
-        video_from_sequence(frame_rate ,format_path, file_path, start_frame)
+        video_from_sequence(frame_rate, format_path, file_path, start_frame)
 
         create_black_bar(path_to_black_bar, width)
 
@@ -55,7 +55,7 @@ class PlayblastManager:
 
         add_text_to_watermark(path_to_watermark, artist_name, department_name, company_name, path_to_video_with_text)
 
-        add_fps_overlay(path_to_video_with_text,path_to_frame_count)
+        add_fps_overlay(path_to_video_with_text, path_to_frame_count)
 
 
         # Check if the file was successfully created and add it to the list
