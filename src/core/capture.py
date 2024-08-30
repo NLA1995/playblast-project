@@ -31,7 +31,7 @@ class PlayblastManager:
             end_frame (int): The frame where the video ends
 
         """
-        file_name = file_name.replace(" ", "")
+        file_name = file_name.replace(" ", "_")
 
         # Construct the full path for the exported file
         file_path = os.path.join(self.temp_dir, "no_watermark.mov")
