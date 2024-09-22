@@ -65,7 +65,9 @@ def format_sequence_path(playblast_path):
     number_of_padding = split_path[1].count("#")
     middle_part = f'.%0{str(number_of_padding)}d.'
     after_part = split_path[2]  # png
+    print("this is the before", before_part)
 
     formatted_path = f"{before_part}{middle_part}{after_part}"
+
 
     return formatted_path

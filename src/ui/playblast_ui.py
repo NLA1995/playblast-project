@@ -1,9 +1,17 @@
-from PySide6.QtWidgets import QApplication, QWidget, QFormLayout, QLabel, QLineEdit, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QFileDialog
+from PySide6.QtWidgets import QApplication, QWidget, QFormLayout, QLabel, QLineEdit, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QFileDialog, QComboBox
+import maya.cmds as cmds
+from PySide6.QtGui import QValidator, QIcon
+from PySide6.QtCore import QSize
 from core.capture import PlayblastManager
 from shiboken6 import wrapInstance
 from maya import OpenMayaUI
 import maya.cmds as cmds
+from os.path import join, dirname
 import maya.app.general.createImageFormats as createImageFormats
+
+# Define repository path via environment variable
+icon_path = dirname(dirname(__file__))
+ICON = join(icon_path, 'src', 'ui', 'folder.png')
 
 def get_maya_window():
     """Get pointed to Maya's main window to use as parent
@@ -14,22 +22,44 @@ def get_maya_window():
     main_window_ptr = OpenMayaUI.MQtUtil.mainWindow()
     return wrapInstance(int(main_window_ptr), QWidget)
 
+class IntegerValidator(QValidator):
+    def validate(self, input_text, pos):
+        if input_text == "":
+            return QValidator.Intermediate
+        try:
+            int(input_text)
+            return QValidator.Acceptable
+        except ValueError:
+            return QValidator.Invalid
 
 class PlayblastManagerUI(QMainWindow):
 
-    def __init__(self, parent=get_maya_window()):
+    def __init__(self, parent=get_maya_window(), debug = False):
+        """
+        This function creates the main window of the UI
+        Args:
+            parent: This function is son of a previous function that allows maya to show the window
+            debug: placed to see the temporary folder of all the assets or don't see it
+        """
         super().__init__(parent=parent)
         # Configure the window
         self.setWindowTitle("Playblast Manager")
         self.setGeometry(300, 300, 500, 250)
-        self.main_widget = PlayblastManagerWidget()
+        self.main_widget = PlayblastManagerWidget( debug = debug)
         self.setCentralWidget(self.main_widget)
 
 
 class PlayblastManagerWidget(QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, debug = False):
+        """
+        This function populates the UI created by the PlayblastManagerUI class
+        Args:
+            parent: just indicates that the function does not inherits from any other function
+            debug: placed to see the temporary folder of all the assets or don't see it
+        """
         super().__init__(parent = parent)
+        self.playblast_mgr = PlayblastManager(debug = debug)
 
         # Initialize the form layout
         form_layout = QFormLayout()
@@ -41,12 +71,23 @@ class PlayblastManagerWidget(QWidget):
 
         # Second row
         second_row = QLabel("Frame rate:")
-        self.rate_line_edit = QLineEdit()
+        self.rate_line_edit = QComboBox()
+        self.rate_line_edit.addItem("24")
+        self.rate_line_edit.addItem("23.976")
+        self.rate_line_edit.addItem("25")
+        self.rate_line_edit.addItem("29.97")
+        self.rate_line_edit.addItem("30")
+        self.rate_line_edit.addItem("40")
+        self.rate_line_edit.addItem("60")
         form_layout.addRow(second_row, self.rate_line_edit)
 
         third_row = QLabel("Size:")
-        self.width_line_edit = QLineEdit()
-        self.height_line_edit = QLineEdit()
+        self.width_line_edit = QLineEdit("1280")
+        self.height_line_edit = QLineEdit("720")
+        self.width_line_edit.setValidator(IntegerValidator())
+        self.height_line_edit.setValidator(IntegerValidator())
+
+
 
         # Create a horizontal layout for the two QLineEdits
         size_hbox_layout = QHBoxLayout()
@@ -58,8 +99,17 @@ class PlayblastManagerWidget(QWidget):
 
 
         fourth_row = QLabel("Frame range:")
-        self.start_line_edit = QLineEdit()
-        self.end_line_edit = QLineEdit()
+        start = cmds.playbackOptions(q=True, min=True)
+        start = str(start)
+        start = start.split('.')[0]
+        end = cmds.playbackOptions(q=True, max=True)
+        end = str(end)
+        end = end.split('.')[0]
+        self.start_line_edit = QLineEdit(start)
+        self.end_line_edit = QLineEdit(end)
+        self.start_line_edit.setValidator(IntegerValidator())
+        self.end_line_edit.setValidator(IntegerValidator())
+
 
         # Create a horizontal layout for the two QLineEdits
         range_hbox_layout = QHBoxLayout()
@@ -72,17 +122,21 @@ class PlayblastManagerWidget(QWidget):
         # Second row
         file_row = QLabel("Export Directory:")
         self.directory_line_edit = QLineEdit()
-        form_layout.addRow(file_row, self.directory_line_edit)
-
-        # Create the "Browse" button
         self.browse_button = QPushButton("Browse")
+
+        self.browse_button.setMinimumSize(100, 24)
+
+        # Set an icon for the button
+        self.browse_button.setIcon(QIcon(ICON))
+        self.browse_button.setIconSize(QSize(24, 24))
 
         # Create a horizontal layout to center the button
         button_layout = QHBoxLayout()
+        button_layout.addWidget(self.directory_line_edit)
         button_layout.addWidget(self.browse_button)
 
         # Add the button layout to the form layout (so it appears just below the inputs)
-        form_layout.addRow(button_layout)
+        form_layout.addRow(file_row, button_layout)
 
         # Set the layout for the widget
         self.setLayout(form_layout)
@@ -117,6 +171,8 @@ class PlayblastManagerWidget(QWidget):
         # Add the label and the horizontal layout to the form layout
         form_layout.addRow(company_row, hbox_layout)
 
+        #Create "clean up" button
+        self.clean_button = QPushButton("Clean")
 
         # Create the "Playblast" button
         self.playblast_button = QPushButton("Playblast")
@@ -124,7 +180,9 @@ class PlayblastManagerWidget(QWidget):
         # Create a horizontal layout to center the button
         button_2_layout = QHBoxLayout()
         button_2_layout.addStretch()
+        button_2_layout.addWidget(self.clean_button)
         button_2_layout.addWidget(self.playblast_button)
+
 
         # Add the button layout to the form layout (so it appears just below the inputs)
         form_layout.addRow(button_2_layout)
@@ -132,44 +190,66 @@ class PlayblastManagerWidget(QWidget):
         # Signals
         self.playblast_button.clicked.connect(self.do_playblast)
         self.browse_button.clicked.connect(self.browse_file)
+        self.clean_button.clicked.connect(self.do_clean)
 
     def browse_file(self):
+        """
+        This function is called when the browse button is clicked and allows the user
+        to input the folder where he/she wants to store the video
+        """
         # Define file filters
         multipleFilters = "Movie Files (*.mov *.mp4 *.avi *.mkv);;All Files (*.*)"
 
         # Open the save file dialog
         file_path = cmds.fileDialog2(fileFilter=multipleFilters, dialogStyle=2,
-                                     startingDirectory=self.directory_line_edit.text(), fm=0)
+                                     startingDirectory=self.directory_line_edit.text(), fm=3)
 
         if file_path:
             # file_path is a list, so take the first selected file
             file_path = file_path[0]
 
-            # Extract directory path from the file path
-            directory_path = '/'.join(file_path.split('/')[:-1])
-
             # Set the directory path in the line edit
-            self.directory_line_edit.setText(directory_path)
+            self.directory_line_edit.setText(file_path)
 
             # Extract and display the file name and final path
-            file_name = file_path.split('/')[-1]
-            print(f"Selected File Name: {file_name}")
-            print(f"Selected Directory Path: {directory_path}")
+            print(f"Selected Directory Path: {file_path}")
+
+    def do_clean(self):
+        """
+        This function cleans the fields of the ui
+        """
+
+        file_name = self.name_line_edit.setText("")
+        dir_name = self.directory_line_edit.setText("")
+        width = self.width_line_edit.setText("")
+        height = self.height_line_edit.setText("")
+        start_frame = self.start_line_edit.setText("")
+        end_frame = self.end_line_edit.setText("")
+        artist_name = self.artist_line_edit.setText("")
+        department_name = self.department_line_edit.setText("")
+        company_name = self.company_line_edit.setText("")
+
+        self.playblast_mgr.do_clean(dir_name, file_name, width, height, start_frame, end_frame, artist_name, department_name, company_name)
 
 
     def do_playblast(self):
-        playblast_mgr = PlayblastManager()
+        """
+        This function is the most important, is the one that calls on playblast_mgr that calls PlayblastManager class
+        to do the final playblast
+
+        """
 
         file_name = self.name_line_edit.text()
         dir_name = self.directory_line_edit.text()
         width = self.width_line_edit.text()
         height = self.height_line_edit.text()
-        frame_rate = self.rate_line_edit.text()
+        frame_rate = self.rate_line_edit.currentText()
         start_frame = self.start_line_edit.text()
         end_frame = self.end_line_edit.text()
         artist_name = self.artist_line_edit.text()
         department_name = self.department_line_edit.text()
         company_name = self.company_line_edit.text()
+
 
         print(f"file_name {file_name}")
         print(f"dir_name {dir_name}")
@@ -183,7 +263,7 @@ class PlayblastManagerWidget(QWidget):
         print(f"company_name {company_name}")
 
         try:
-            playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), int(frame_rate), int(start_frame), int(end_frame), artist_name, department_name, company_name)
+            self.playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), int(frame_rate), int(start_frame), int(end_frame), artist_name, department_name, company_name)
         except(ValueError):
             cmds.inViewMessage(amg='<hl>please provide all the information</hl>.', pos='topCenter', fade=True)
 
