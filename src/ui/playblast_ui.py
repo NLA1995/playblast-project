@@ -11,7 +11,7 @@ import maya.app.general.createImageFormats as createImageFormats
 
 # Define repository path via environment variable
 icon_path = dirname(dirname(__file__))
-ICON = join(icon_path, 'src', 'ui', 'folder.png')
+ICON = join(icon_path, "ui", "folder.png")
 
 def get_maya_window():
     """Get pointed to Maya's main window to use as parent
@@ -31,6 +31,7 @@ class IntegerValidator(QValidator):
             return QValidator.Acceptable
         except ValueError:
             return QValidator.Invalid
+
 
 class PlayblastManagerUI(QMainWindow):
 
@@ -55,8 +56,8 @@ class PlayblastManagerWidget(QWidget):
         """
         This function populates the UI created by the PlayblastManagerUI class
         Args:
-            parent: just indicates that the function does not inherits from any other function
-            debug: placed to see the temporary folder of all the assets or don't see it
+            parent (none): just indicates that the function does not inherits from any other function
+            debug (bool): placed to see the temporary folder of all the assets or don't see it
         """
         super().__init__(parent = parent)
         self.playblast_mgr = PlayblastManager(debug = debug)
@@ -70,56 +71,6 @@ class PlayblastManagerWidget(QWidget):
         form_layout.addRow(first_row, self.name_line_edit)
 
         # Second row
-        second_row = QLabel("Frame rate:")
-        self.rate_line_edit = QComboBox()
-        self.rate_line_edit.addItem("24")
-        self.rate_line_edit.addItem("23.976")
-        self.rate_line_edit.addItem("25")
-        self.rate_line_edit.addItem("29.97")
-        self.rate_line_edit.addItem("30")
-        self.rate_line_edit.addItem("40")
-        self.rate_line_edit.addItem("60")
-        form_layout.addRow(second_row, self.rate_line_edit)
-
-        third_row = QLabel("Size:")
-        self.width_line_edit = QLineEdit("1280")
-        self.height_line_edit = QLineEdit("720")
-        self.width_line_edit.setValidator(IntegerValidator())
-        self.height_line_edit.setValidator(IntegerValidator())
-
-
-
-        # Create a horizontal layout for the two QLineEdits
-        size_hbox_layout = QHBoxLayout()
-        size_hbox_layout.addWidget(self.width_line_edit)
-        size_hbox_layout.addWidget(self.height_line_edit)
-
-        # Add the label and the horizontal layout to the form layout
-        form_layout.addRow(third_row, size_hbox_layout)
-
-
-        fourth_row = QLabel("Frame range:")
-        start = cmds.playbackOptions(q=True, min=True)
-        start = str(start)
-        start = start.split('.')[0]
-        end = cmds.playbackOptions(q=True, max=True)
-        end = str(end)
-        end = end.split('.')[0]
-        self.start_line_edit = QLineEdit(start)
-        self.end_line_edit = QLineEdit(end)
-        self.start_line_edit.setValidator(IntegerValidator())
-        self.end_line_edit.setValidator(IntegerValidator())
-
-
-        # Create a horizontal layout for the two QLineEdits
-        range_hbox_layout = QHBoxLayout()
-        range_hbox_layout.addWidget(self.start_line_edit)
-        range_hbox_layout.addWidget(self.end_line_edit)
-
-        # Add the label and the horizontal layout to the form layout
-        form_layout.addRow(fourth_row, range_hbox_layout)
-
-        # Second row
         file_row = QLabel("Export Directory:")
         self.directory_line_edit = QLineEdit()
         self.browse_button = QPushButton("Browse")
@@ -128,7 +79,7 @@ class PlayblastManagerWidget(QWidget):
 
         # Set an icon for the button
         self.browse_button.setIcon(QIcon(ICON))
-        self.browse_button.setIconSize(QSize(24, 24))
+        self.browse_button.setIconSize(QSize(20, 20))
 
         # Create a horizontal layout to center the button
         button_layout = QHBoxLayout()
@@ -140,6 +91,46 @@ class PlayblastManagerWidget(QWidget):
 
         # Set the layout for the widget
         self.setLayout(form_layout)
+
+        # rate_row
+        rate_row = QLabel("Frame rate:")
+        self.rate_combo_box = QComboBox()
+        rates = ["24", "23.976", "25", "29.97", "30", "40", "60"]
+        for i in rates:
+            self.rate_combo_box.addItem(i)
+        form_layout.addRow(rate_row, self.rate_combo_box)
+
+        third_row = QLabel("Size:")
+        self.width_line_edit = QLineEdit("1280")
+        self.height_line_edit = QLineEdit("720")
+        self.width_line_edit.setValidator(IntegerValidator())
+        self.height_line_edit.setValidator(IntegerValidator())
+
+        # Create a horizontal layout for the two QLineEdits
+        size_hbox_layout = QHBoxLayout()
+        size_hbox_layout.addWidget(self.width_line_edit)
+        size_hbox_layout.addWidget(self.height_line_edit)
+
+        # Add the label and the horizontal layout to the form layout
+        form_layout.addRow(third_row, size_hbox_layout)
+
+        fourth_row = QLabel("Frame range:")
+        start = int(cmds.playbackOptions(q=True, min=True))
+        start = str(start)
+        end = int(cmds.playbackOptions(q=True, max=True))
+        end = str(end)
+        self.start_line_edit = QLineEdit(start)
+        self.end_line_edit = QLineEdit(end)
+        self.start_line_edit.setValidator(IntegerValidator())
+        self.end_line_edit.setValidator(IntegerValidator())
+
+        # Create a horizontal layout for the two QLineEdits
+        range_hbox_layout = QHBoxLayout()
+        range_hbox_layout.addWidget(self.start_line_edit)
+        range_hbox_layout.addWidget(self.end_line_edit)
+
+        # Add the label and the horizontal layout to the form layout
+        form_layout.addRow(fourth_row, range_hbox_layout)
 
         # Define the labels and corresponding Artist
         artist_row = QLabel("Artist Name:")
@@ -216,7 +207,7 @@ class PlayblastManagerWidget(QWidget):
 
     def do_clean(self):
         """
-        This function cleans the fields of the ui
+        This function resets the fields of the ui
         """
 
         file_name = self.name_line_edit.setText("")
@@ -243,7 +234,7 @@ class PlayblastManagerWidget(QWidget):
         dir_name = self.directory_line_edit.text()
         width = self.width_line_edit.text()
         height = self.height_line_edit.text()
-        frame_rate = self.rate_line_edit.currentText()
+        frame_rate = self.rate_combo_box.currentText()
         start_frame = self.start_line_edit.text()
         end_frame = self.end_line_edit.text()
         artist_name = self.artist_line_edit.text()
@@ -262,11 +253,14 @@ class PlayblastManagerWidget(QWidget):
         print(f"department_name {department_name}")
         print(f"company_name {company_name}")
 
-        try:
-            self.playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), int(frame_rate), int(start_frame), int(end_frame), artist_name, department_name, company_name)
-        except(ValueError):
-            cmds.inViewMessage(amg='<hl>please provide all the information</hl>.', pos='topCenter', fade=True)
+        if file_name != "":
 
+            try:
+                self.playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), int(frame_rate), int(start_frame), int(end_frame), artist_name, department_name, company_name)
+            except(ValueError):
+                cmds.inViewMessage(amg='<hl>please provide all the information</hl>.', pos='topCenter', fade=True)
+        else:
+            cmds.inViewMessage(amg='<hl>please provide a valid name for the playblast</hl>.', pos='topCenter', fade=True)
 
 
 if __name__ == "__main__":

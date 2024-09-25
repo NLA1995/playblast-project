@@ -6,7 +6,7 @@ from utils.ffmpeg_utils import video_from_sequence
 from utils.ffmpeg_utils import create_black_bar
 from utils.ffmpeg_utils import create_water_mark
 from utils.ffmpeg_utils import add_text_to_watermark
-from utils.ffmpeg_utils import add_fcount_overlay
+from utils.ffmpeg_utils import add_current_frame_overlay
 import tempfile
 
 
@@ -60,7 +60,7 @@ class PlayblastManager:
 
         add_text_to_watermark(path_to_watermark, artist_name, department_name, company_name, path_to_video_with_text)
 
-        add_fcount_overlay(path_to_video_with_text, path_to_frame_count, start_frame)
+        add_current_frame_overlay(path_to_video_with_text, path_to_frame_count, start_frame)
 
         #clean temporary directory
         if not self.debug:
@@ -74,12 +74,4 @@ class PlayblastManager:
             print("Error while making playblast: the file was not created.")
 
     def do_clean(self, dir_name, file_name, width, height, start_frame, end_frame, artist_name, department_name, company_name):
-        file_name = ""
-        dir_name = ""
-        width = ""
-        height = ""
-        start_frame = ""
-        end_frame = ""
-        artist_name = ""
-        department_name = ""
-        company_name = ""
+        pass
