@@ -38,8 +38,8 @@ class PlayblastManagerUI(QMainWindow):
         """
         This function creates the main window of the UI
         Args:
-            parent: This function is son of a previous function that allows maya to show the window
-            debug: placed to see the temporary folder of all the assets or don't see it
+             parent (QWidget): Parent widget for the window. Default to Maya window.
+            debug (bool): Initialize in debug mode. If True, the temporary folder will not be deleted.
         """
         super().__init__(parent=parent)
         # Configure the window
