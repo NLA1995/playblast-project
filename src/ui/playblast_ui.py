@@ -6,7 +6,7 @@ from core.capture import PlayblastManager
 from shiboken6 import wrapInstance
 from maya import OpenMayaUI
 import maya.cmds as cmds
-from os.path import join, dirname
+from os.path import join, dirname, isdir
 import maya.app.general.createImageFormats as createImageFormats
 
 # Define repository path via environment variable
@@ -253,14 +253,14 @@ class PlayblastManagerWidget(QWidget):
         print(f"department_name {department_name}")
         print(f"company_name {company_name}")
 
-        if file_name != "":
+        if file_name != "" and isdir(dir_name):
 
             try:
                 self.playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), int(frame_rate), int(start_frame), int(end_frame), artist_name, department_name, company_name)
             except(ValueError):
                 cmds.inViewMessage(amg='<hl>please provide all the information</hl>.', pos='topCenter', fade=True)
         else:
-            cmds.inViewMessage(amg='<hl>please provide a valid name for the playblast</hl>.', pos='topCenter', fade=True)
+            cmds.inViewMessage(amg='<hl>please provide a valid name or folder for the playblast</hl>.', pos='topCenter', fade=True)
 
 
 if __name__ == "__main__":
