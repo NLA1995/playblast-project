@@ -65,6 +65,8 @@ class PlayblastManager:
         #clean temporary directory
         if not self.debug:
             self.temp_dir.cleanup()
+        else:
+            print(f"Did not delete TempDir : {self.temp_dir.name}")
 
         # Check if the file was successfully created and add it to the list
         if os.path.exists(path_to_frame_count):
