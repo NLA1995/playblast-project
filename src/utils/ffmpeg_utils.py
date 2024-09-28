@@ -28,6 +28,7 @@ def video_from_sequence(frame_rate, formatted_path, output_video, start_frame=No
 
     return(output_video)
 
+
 def create_black_bar(output_file_path, width):
     """ This function creates a file with a black bar.
 
@@ -36,7 +37,7 @@ def create_black_bar(output_file_path, width):
         width(int): The horizontal size of the black bar.
 
     """
-    command = f"{EXECUTABLE} -f lavfi -i color=black:{width}x80:d=3,format=rgb24 -frames:v 1 {output_file_path}"
+    command = f"{EXECUTABLE} -f lavfi -i color=black:{width}x80:d=3,format=rgb24 -frames:v 1 -y {output_file_path}"
     run_subprocess(command)
 
 
@@ -52,6 +53,7 @@ def create_water_mark(input_video_path, black_bar_path, output_video_path):
     command = (f"{EXECUTABLE} -i {input_video_path} -i {black_bar_path} -i {black_bar_path} "
             f"-y -filter_complex [1]lut=a=val*0.1[bar1];[2]lut=a=val*0.1[bar2];[0][bar1]overlay=x=(W-w)/2:y=0[video_with_top];[video_with_top][bar2]overlay=x=(W-w)/2:y=H-h {output_video_path}")
     run_subprocess(command)
+
 
 def add_text_to_watermark(input_video_path, artist_name, department_name, company_name, output_video_path):
     """
@@ -69,7 +71,7 @@ def add_text_to_watermark(input_video_path, artist_name, department_name, compan
         f"\"drawtext=text='{artist_name}':fontfile='Arial':fontsize=50:fontcolor=white:x=10:y=25\","
         f"drawtext=text='{department_name}':fontfile='Arial':fontsize=50:fontcolor=white:x=w-text_w-10:y=25\","
         f"drawtext=text='{company_name}':fontfile='Arial':fontsize=50:fontcolor=white:x=10:y=h-text_h-10\" "
-        f"-codec:a copy {output_video_path}"
+        f"-codec:a copy -y {output_video_path}"
     )
 
     run_subprocess(command)
@@ -94,7 +96,7 @@ def add_current_frame_overlay(input_video_path, output_video_path, start_frame):
         "fontcolor=white:fontsize=40:box=1:boxcolor=black@0.5:"
         f"text='%{{frame_num}}':"
         f"start_number={start_frame} "
-        f"-codec:a copy {output_video_path}"
+        f"-codec:a copy -y {output_video_path}"
     )
 
     process, stderr = run_subprocess(command)
