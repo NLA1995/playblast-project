@@ -32,8 +32,8 @@ def create_black_bar(output_file_path, width):
     """ This function creates a file with a black bar.
 
     Args:
-        output_file_path: The name of the path where the black bar will be stored.
-        width: The horizontal size of the black bar.
+        output_file_path(str): The name of the path where the black bar will be stored.
+        width(int): The horizontal size of the black bar.
 
     """
     command = f"{EXECUTABLE} -f lavfi -i color=black:{width}x80:d=3,format=rgb24 -frames:v 1 {output_file_path}"
@@ -44,9 +44,9 @@ def create_water_mark(input_video_path, black_bar_path, output_video_path):
     """ This function creates 2 watermarks on the top and bottom of the video.
 
     Args:
-        input_video_path: The path of the initial video without the watermark.
-        black_bar_path: The path of the black bar.
-        output_video_path: The path where the video with the watermark will be stored.
+        input_video_path(str): The path of the initial video without the watermark.
+        black_bar_path(str): The path of the black bar.
+        output_video_path(str): The path where the video with the watermark will be stored.
 
     """
     command = (f"{EXECUTABLE} -i {input_video_path} -i {black_bar_path} -i {black_bar_path} "
@@ -57,11 +57,11 @@ def add_text_to_watermark(input_video_path, artist_name, department_name, compan
     """
     This function adds the text on top of the black bars
     Args:
-        input_video_path: The path of the initial video with the black bars
-        artist_name: The name of the artist inputted by the user
-        department_name: The name of the department inputted by the user
-        company_name: The name of the company inputted by the user
-        output_video_path: The path where the video with the info will be stored.
+        input_video_path(str): The path of the initial video with the black bars
+        artist_name(str): The name of the artist inputted by the user
+        department_name(str): The name of the department inputted by the user
+        company_name(str): The name of the company inputted by the user
+        output_video_path(str): The path where the video with the info will be stored.
 
     """
     command = (
@@ -79,9 +79,9 @@ def add_current_frame_overlay(input_video_path, output_video_path, start_frame):
     """
     This function adds the current frame count on the right bottom corner of the video
     Args:
-        input_video_path: The path of the initial video with the other info
-        output_video_path: The path where the video with the info will be stored
-        start_frame: The number of frame where the video starts
+        input_video_path(str): The path of the initial video with the other info
+        output_video_path(str): The path where the video with the info will be stored
+        start_frame(str): The number of frame where the video starts
 
     Returns:
 
@@ -109,7 +109,7 @@ def run_subprocess(command):
     """
     This function takes care of running the command in the background
     Args:
-        command: a ffmpeg line of code
+        command (str): a ffmpeg line of code
     """
     # Run the command using subprocess
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

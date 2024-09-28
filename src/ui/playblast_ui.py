@@ -241,7 +241,7 @@ class PlayblastManagerWidget(QWidget):
         department_name = self.department_line_edit.text()
         company_name = self.company_line_edit.text()
 
-
+        
         print(f"file_name {file_name}")
         print(f"dir_name {dir_name}")
         print(f"width {width}")
