@@ -188,11 +188,21 @@ class PlayblastManagerWidget(QWidget):
         self.reset_button.clicked.connect(self.do_reset)
 
     def get_start_frame(self):
+        """
+        Gets the start frame from maya's timeline
+        Returns(str): start frame
+
+        """
         start = int(cmds.playbackOptions(q=True, min=True))
         start = str(start)
         return start
 
     def get_end_frame(self):
+        """
+        Gets the end frame from maya's timeline
+        Returns(str): end frame
+
+        """
         end = int(cmds.playbackOptions(q=True, max=True))
         end = str(end)
         return end
