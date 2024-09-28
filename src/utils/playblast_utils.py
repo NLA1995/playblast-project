@@ -68,4 +68,5 @@ def format_sequence_path(playblast_path):
 
     formatted_path = f"{before_part}{middle_part}{after_part}"
 
+
     return formatted_path
