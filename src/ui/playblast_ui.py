@@ -60,8 +60,11 @@ class PlayblastManagerWidget(QWidget):
             debug (bool): placed to see the temporary folder of all the assets or don't see it
         """
         super().__init__(parent = parent)
+        self.debug = debug
         self.playblast_mgr = PlayblastManager(debug = debug)
 
+        self.default_width = "1280"
+        self.default_height = "720"
         # Initialize the form layout
         form_layout = QFormLayout()
 
@@ -101,8 +104,8 @@ class PlayblastManagerWidget(QWidget):
         form_layout.addRow(rate_row, self.rate_combo_box)
 
         third_row = QLabel("Size:")
-        self.width_line_edit = QLineEdit("1280")
-        self.height_line_edit = QLineEdit("720")
+        self.width_line_edit = QLineEdit(self.default_width)
+        self.height_line_edit = QLineEdit(self.default_height)
         self.width_line_edit.setValidator(IntegerValidator())
         self.height_line_edit.setValidator(IntegerValidator())
 
@@ -115,12 +118,9 @@ class PlayblastManagerWidget(QWidget):
         form_layout.addRow(third_row, size_hbox_layout)
 
         fourth_row = QLabel("Frame range:")
-        start = int(cmds.playbackOptions(q=True, min=True))
-        start = str(start)
-        end = int(cmds.playbackOptions(q=True, max=True))
-        end = str(end)
-        self.start_line_edit = QLineEdit(start)
-        self.end_line_edit = QLineEdit(end)
+
+        self.start_line_edit = QLineEdit(self.get_start_frame())
+        self.end_line_edit = QLineEdit(self.get_end_frame())
         self.start_line_edit.setValidator(IntegerValidator())
         self.end_line_edit.setValidator(IntegerValidator())
 
@@ -135,6 +135,7 @@ class PlayblastManagerWidget(QWidget):
         # Define the labels and corresponding Artist
         artist_row = QLabel("Artist Name:")
         self.artist_line_edit = QLineEdit()
+        self.artist_line_edit.setPlaceholderText("Optional...")
 
         hbox_layout = QHBoxLayout()
         hbox_layout.addWidget(self.artist_line_edit)
@@ -145,6 +146,7 @@ class PlayblastManagerWidget(QWidget):
         # Define the labels and corresponding Department
         department_row = QLabel("Department:")
         self.department_line_edit = QLineEdit()
+        self.department_line_edit.setPlaceholderText("Optional...")
 
         hbox_layout = QHBoxLayout()
         hbox_layout.addWidget(self.department_line_edit)
@@ -155,6 +157,7 @@ class PlayblastManagerWidget(QWidget):
         # Define the labels and corresponding company
         company_row = QLabel("Company Name:")
         self.company_line_edit = QLineEdit()
+        self.company_line_edit.setPlaceholderText("Optional...")
 
         hbox_layout = QHBoxLayout()
         hbox_layout.addWidget(self.company_line_edit)
@@ -163,7 +166,8 @@ class PlayblastManagerWidget(QWidget):
         form_layout.addRow(company_row, hbox_layout)
 
         #Create "clean up" button
-        self.clean_button = QPushButton("Clean")
+        self.reset_button = QPushButton("Reset")
+        self.reset_button.setToolTip("Reset to default values")
 
         # Create the "Playblast" button
         self.playblast_button = QPushButton("Playblast")
@@ -171,7 +175,7 @@ class PlayblastManagerWidget(QWidget):
         # Create a horizontal layout to center the button
         button_2_layout = QHBoxLayout()
         button_2_layout.addStretch()
-        button_2_layout.addWidget(self.clean_button)
+        button_2_layout.addWidget(self.reset_button)
         button_2_layout.addWidget(self.playblast_button)
 
 
@@ -181,7 +185,27 @@ class PlayblastManagerWidget(QWidget):
         # Signals
         self.playblast_button.clicked.connect(self.do_playblast)
         self.browse_button.clicked.connect(self.browse_file)
-        self.clean_button.clicked.connect(self.do_clean)
+        self.reset_button.clicked.connect(self.do_reset)
+
+    def get_start_frame(self):
+        """
+        Gets the start frame from maya's timeline
+        Returns(str): start frame
+
+        """
+        start = int(cmds.playbackOptions(q=True, min=True))
+        start = str(start)
+        return start
+
+    def get_end_frame(self):
+        """
+        Gets the end frame from maya's timeline
+        Returns(str): end frame
+
+        """
+        end = int(cmds.playbackOptions(q=True, max=True))
+        end = str(end)
+        return end
 
     def browse_file(self):
         """
@@ -205,17 +229,17 @@ class PlayblastManagerWidget(QWidget):
             # Extract and display the file name and final path
             print(f"Selected Directory Path: {file_path}")
 
-    def do_clean(self):
+    def do_reset(self):
         """
         This function resets the fields of the ui
         """
 
         self.name_line_edit.setText("")
         self.directory_line_edit.setText("")
-        self.width_line_edit.setText("")
-        self.height_line_edit.setText("")
-        self.start_line_edit.setText("")
-        self.end_line_edit.setText("")
+        self.width_line_edit.setText(self.default_width)
+        self.height_line_edit.setText(self.default_height)
+        self.start_line_edit.setText(self.get_start_frame())
+        self.end_line_edit.setText(self.get_end_frame())
         self.artist_line_edit.setText("")
         self.department_line_edit.setText("")
         self.company_line_edit.setText("")
@@ -241,17 +265,17 @@ class PlayblastManagerWidget(QWidget):
         department_name = self.department_line_edit.text()
         company_name = self.company_line_edit.text()
 
-        
-        print(f"file_name {file_name}")
-        print(f"dir_name {dir_name}")
-        print(f"width {width}")
-        print(f"height {height}")
-        print(f"frame_rate {frame_rate}")
-        print(f"start_frame {start_frame}")
-        print(f"end_frame {end_frame}")
-        print(f"artist_name {artist_name}")
-        print(f"department_name {department_name}")
-        print(f"company_name {company_name}")
+        if self.debug is True:
+            print(f"file_name {file_name}")
+            print(f"dir_name {dir_name}")
+            print(f"width {width}")
+            print(f"height {height}")
+            print(f"frame_rate {frame_rate}")
+            print(f"start_frame {start_frame}")
+            print(f"end_frame {end_frame}")
+            print(f"artist_name {artist_name}")
+            print(f"department_name {department_name}")
+            print(f"company_name {company_name}")
 
         if file_name != "" and isdir(dir_name):
 
