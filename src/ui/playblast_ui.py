@@ -56,7 +56,7 @@ class PlayblastManagerWidget(QWidget):
         """
         This function populates the UI created by the PlayblastManagerUI class
         Args:
-            parent (none): just indicates that the function does not inherits from any other function
+            parent (None): just indicates that the function does not inherits from any other function
             debug (bool): placed to see the temporary folder of all the assets or don't see it
         """
         super().__init__(parent = parent)
@@ -210,17 +210,17 @@ class PlayblastManagerWidget(QWidget):
         This function resets the fields of the ui
         """
 
-        file_name = self.name_line_edit.setText("")
-        dir_name = self.directory_line_edit.setText("")
-        width = self.width_line_edit.setText("")
-        height = self.height_line_edit.setText("")
-        start_frame = self.start_line_edit.setText("")
-        end_frame = self.end_line_edit.setText("")
-        artist_name = self.artist_line_edit.setText("")
-        department_name = self.department_line_edit.setText("")
-        company_name = self.company_line_edit.setText("")
+        self.name_line_edit.setText("")
+        self.directory_line_edit.setText("")
+        self.width_line_edit.setText("")
+        self.height_line_edit.setText("")
+        self.start_line_edit.setText("")
+        self.end_line_edit.setText("")
+        self.artist_line_edit.setText("")
+        self.department_line_edit.setText("")
+        self.company_line_edit.setText("")
 
-        self.playblast_mgr.do_clean(dir_name, file_name, width, height, start_frame, end_frame, artist_name, department_name, company_name)
+
 
 
     def do_playblast(self):

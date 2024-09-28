@@ -107,7 +107,7 @@ def add_current_frame_overlay(input_video_path, output_video_path, start_frame):
 
 def run_subprocess(command):
     """
-    This function takes care of running everything off the eye of the user
+    This function takes care of running the command in the background
     Args:
         command: a ffmpeg line of code
     """

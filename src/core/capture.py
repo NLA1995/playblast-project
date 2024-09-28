@@ -73,5 +73,3 @@ class PlayblastManager:
         else:
             print("Error while making playblast: the file was not created.")
 
-    def do_clean(self, dir_name, file_name, width, height, start_frame, end_frame, artist_name, department_name, company_name):
-        pass
