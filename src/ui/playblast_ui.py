@@ -244,9 +244,6 @@ class PlayblastManagerWidget(QWidget):
         self.department_line_edit.setText("")
         self.company_line_edit.setText("")
 
-
-
-
     def do_playblast(self):
         """
         This function is the most important, is the one that calls on playblast_mgr that calls PlayblastManager class
@@ -277,14 +274,50 @@ class PlayblastManagerWidget(QWidget):
             print(f"department_name {department_name}")
             print(f"company_name {company_name}")
 
-        if file_name != "" and isdir(dir_name):
+        if self.validate_inputs():
+            self.playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), int(frame_rate),
+                                            int(start_frame), int(end_frame), artist_name, department_name,
+                                            company_name)
 
-            try:
-                self.playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), int(frame_rate), int(start_frame), int(end_frame), artist_name, department_name, company_name)
-            except(ValueError):
-                cmds.inViewMessage(amg='<hl>please provide all the information</hl>.', pos='topCenter', fade=True)
-        else:
-            cmds.inViewMessage(amg='<hl>please provide a valid name or folder for the playblast</hl>.', pos='topCenter', fade=True)
+    def validate_inputs(self):
+        """
+        Validate UI input fields.
+        If something is invalid, display warning to the user with the invalid ones.
+
+        Returns:
+            bool: True if inputs are valid, else False.
+
+        """
+        invalid_inputs = []
+
+        file_name = self.name_line_edit.text()
+        dir_name = self.directory_line_edit.text()
+        width = self.width_line_edit.text()
+        height = self.height_line_edit.text()
+        start_frame = self.start_line_edit.text()
+        end_frame = self.end_line_edit.text()
+        if file_name == "":
+            invalid_inputs.append('File Name')
+
+        if not isdir(dir_name):
+            invalid_inputs.append('Export Dir')
+
+        if width == "" or height == "":
+            invalid_inputs.append('Size Fields')
+
+        if start_frame == "" or end_frame == "":
+            invalid_inputs.append('Frame Range')
+
+        if len(invalid_inputs) > 0:
+            invalid_inputs_str = "- " + "\n- ".join(invalid_inputs)
+            message = f"Please fix invalid inputs:\n{invalid_inputs_str}"
+            cmds.inViewMessage(amg=f"<hl>{message}</hl>.", pos="topCenter", fade=True)
+            cmds.warning(message)
+            return False
+
+        # If list is empty, inputs are valid
+        return True
+
 
 
 if __name__ == "__main__":
