@@ -14,7 +14,8 @@ icon_path = dirname(dirname(__file__))
 ICON = join(icon_path, "ui", "folder.png")
 
 def get_maya_window():
-    """Get pointed to Maya's main window to use as parent
+    """
+    Get pointed to Maya's main window to use as parent
 
     Returns:
         QWidget: QWidget representing Maya's main window
@@ -24,6 +25,16 @@ def get_maya_window():
 
 class IntegerValidator(QValidator):
     def validate(self, input_text, pos):
+        """
+        This function validates that the input is an int
+        Args:
+            input_text(str): the text the user tries to input
+            pos: the position of the cursor
+
+        Returns: either Intermediate(empty string), acceptable(can be converted to integer) or invalid(can not be
+        converted to integer)
+
+        """
         if input_text == "":
             return QValidator.Intermediate
         try:
@@ -102,6 +113,14 @@ class PlayblastManagerWidget(QWidget):
         for i in rates:
             self.rate_combo_box.addItem(i)
         form_layout.addRow(rate_row, self.rate_combo_box)
+
+        #cameras row
+        cameras_row = QLabel("Camera:")
+        self.camera_combo_box = QComboBox()
+        cameras = self.list_cameras()
+        for i in cameras:
+            self.camera_combo_box.addItem(i)
+        form_layout.addRow(cameras_row, self.camera_combo_box)
 
         third_row = QLabel("Size:")
         self.width_line_edit = QLineEdit(self.default_width)
@@ -187,6 +206,26 @@ class PlayblastManagerWidget(QWidget):
         self.browse_button.clicked.connect(self.browse_file)
         self.reset_button.clicked.connect(self.do_reset)
 
+    def list_cameras(self):
+        """
+        This function list all the cameras in the scene
+        Returns (list): a list of cameras
+
+        """
+        all_cameras = cmds.listCameras(p=True, o=True)
+        return all_cameras
+
+
+
+    def get_selected_camera(self):
+        """
+        This function get the name of the selected camera in the ui
+        Returns(str): the name of the selected camera
+
+        """
+        selected_camera = self.camera_combo_box.currentText()
+        return selected_camera
+
     def get_start_frame(self):
         """
         Gets the start frame from maya's timeline
@@ -238,6 +277,11 @@ class PlayblastManagerWidget(QWidget):
         self.directory_line_edit.setText("")
         self.width_line_edit.setText(self.default_width)
         self.height_line_edit.setText(self.default_height)
+        cameras = self.list_cameras()
+        for camera in cameras:
+            # Check if the camera is not already in the combo box
+            if camera not in [self.camera_combo_box.itemText(i) for i in range(self.camera_combo_box.count())]:
+                self.camera_combo_box.addItem(camera)
         self.start_line_edit.setText(self.get_start_frame())
         self.end_line_edit.setText(self.get_end_frame())
         self.artist_line_edit.setText("")
@@ -256,6 +300,7 @@ class PlayblastManagerWidget(QWidget):
         width = self.width_line_edit.text()
         height = self.height_line_edit.text()
         frame_rate = self.rate_combo_box.currentText()
+        camera = self.camera_combo_box.currentText()
         start_frame = self.start_line_edit.text()
         end_frame = self.end_line_edit.text()
         artist_name = self.artist_line_edit.text()
@@ -268,6 +313,7 @@ class PlayblastManagerWidget(QWidget):
             print(f"width {width}")
             print(f"height {height}")
             print(f"frame_rate {frame_rate}")
+            print(f"camera {camera}")
             print(f"start_frame {start_frame}")
             print(f"end_frame {end_frame}")
             print(f"artist_name {artist_name}")
@@ -275,7 +321,7 @@ class PlayblastManagerWidget(QWidget):
             print(f"company_name {company_name}")
 
         if self.validate_inputs():
-            self.playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), int(frame_rate),
+            self.playblast_mgr.do_playblast(dir_name, file_name, int(width), int(height), camera, int(frame_rate),
                                             int(start_frame), int(end_frame), artist_name, department_name,
                                             company_name)
 

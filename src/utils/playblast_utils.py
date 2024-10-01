@@ -2,9 +2,25 @@ import maya.cmds as cmds
 import os
 
 
-def create_png_sequence(dir_path, file_name, width, height, start_time=None, end_time=None):
+def get_active_viewport():
+    """
+    This function gets the active viewport
+    Returns (str):name of the active viewport
 
-    """ This function creates a sequences of png images based on the input of the user
+    """
+    # Get the active panel
+    active_panel = cmds.getPanel(withFocus=True)
+
+    # Check if the active panel is a model editor
+    if cmds.modelEditor(active_panel, exists=True):
+        return active_panel
+    else:
+        return None
+
+def create_png_sequence(dir_path, file_name, width, height, camera_name, start_time=None, end_time=None):
+
+    """
+    This function creates a sequences of png images based on the input of the user
     Args:
 
         dir_path (str): The path to the folder you want to store your pngs in
@@ -27,6 +43,15 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
         start_time = cmds.playbackOptions(query=True, minTime=True)
 
     full_file_name = os.path.join(dir_path, file_name.replace(" ", ""))
+    camera_name = camera_name
+    active_vp = get_active_viewport()
+    print(active_vp)
+    if active_vp != None:
+        active_vp = active_vp.rstrip("|")
+
+    # Set the camera for the active viewport
+    cmds.modelEditor(active_vp, edit=True, camera=camera_name)
+
 
     playblast_path = cmds.playblast(
         format='image',          # Output format: 'avi', 'qt', 'movie', etc.
@@ -48,7 +73,8 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
 
 def format_sequence_path(playblast_path):
 
-    """This is a function that exchanges the #### given by maya into a format ffmpeg can manage
+    """
+    This is a function that exchanges the #### given by maya into a format ffmpeg can manage
 
     Args:
         playblast_path (str): The path where the image sequence lives

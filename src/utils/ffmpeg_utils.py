@@ -9,7 +9,8 @@ EXECUTABLE = join(repo_path, 'bin', 'ffmpeg', 'bin', 'ffmpeg.exe')
 
 def video_from_sequence(frame_rate, formatted_path, output_video, start_frame=None):
 
-    """This function creates a video based on a sequence of images.
+    """
+    This function creates a video based on a sequence of images.
 
     Args:
         formatted_path (str): The necessary path to output the video.
@@ -30,7 +31,8 @@ def video_from_sequence(frame_rate, formatted_path, output_video, start_frame=No
 
 
 def create_black_bar(output_file_path, width):
-    """ This function creates a file with a black bar.
+    """
+    This function creates a file with a black bar.
 
     Args:
         output_file_path(str): The name of the path where the black bar will be stored.
@@ -42,7 +44,8 @@ def create_black_bar(output_file_path, width):
 
 
 def create_water_mark(input_video_path, black_bar_path, output_video_path):
-    """ This function creates 2 watermarks on the top and bottom of the video.
+    """
+    This function creates 2 watermarks on the top and bottom of the video.
 
     Args:
         input_video_path(str): The path of the initial video without the watermark.
