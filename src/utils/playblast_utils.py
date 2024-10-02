@@ -45,7 +45,11 @@ def create_png_sequence(dir_path, file_name, width, height, camera_name, start_t
     full_file_name = os.path.join(dir_path, file_name.replace(" ", ""))
     camera_name = camera_name
     active_vp = get_active_viewport()
-    print(active_vp)
+
+    # Store the current camera
+    current_camera = cmds.modelEditor(active_vp, query=True, camera=True)
+
+    print(f"this is the active vp :{active_vp}")
     if active_vp != None:
         active_vp = active_vp.rstrip("|")
 
@@ -68,6 +72,9 @@ def create_png_sequence(dir_path, file_name, width, height, camera_name, start_t
         endTime=end_time,        # End frame
         widthHeight=(width, height)  # Resolution of the playblast
     )
+
+    # Return to the initial camera view
+    cmds.modelEditor(active_vp, edit=True, camera=current_camera)
 
     return playblast_path
 
