@@ -27,6 +27,7 @@ def create_png_sequence(dir_path, file_name, width, height, camera_name, start_t
         file_name (str): The name of the file for each png
         width (int): The horizontal size of the image
         height (int): The vertical size of the image
+        camera_name(str): The name of the camera you want the playblast of
         start_time (int): The start point from timeline where export begins
         end_time (int): The end point in timeline where export ends
 
@@ -43,7 +44,6 @@ def create_png_sequence(dir_path, file_name, width, height, camera_name, start_t
         start_time = cmds.playbackOptions(query=True, minTime=True)
 
     full_file_name = os.path.join(dir_path, file_name.replace(" ", ""))
-    camera_name = camera_name
     active_vp = get_active_viewport()
 
     # Store the current camera

@@ -15,7 +15,7 @@ ICON = join(icon_path, "ui", "folder.png")
 
 def get_maya_window():
     """
-    Get pointed to Maya's main window to use as parent
+    Get pointer to Maya's main window to use as parent
 
     Returns:
         QWidget: QWidget representing Maya's main window
@@ -277,11 +277,10 @@ class PlayblastManagerWidget(QWidget):
         self.directory_line_edit.setText("")
         self.width_line_edit.setText(self.default_width)
         self.height_line_edit.setText(self.default_height)
+        self.camera_combo_box.clear()
         cameras = self.list_cameras()
-        for camera in cameras:
-            # Check if the camera is not already in the combo box
-            if camera not in [self.camera_combo_box.itemText(i) for i in range(self.camera_combo_box.count())]:
-                self.camera_combo_box.addItem(camera)
+        for i in cameras:
+            self.camera_combo_box.addItem(i)
         self.start_line_edit.setText(self.get_start_frame())
         self.end_line_edit.setText(self.get_end_frame())
         self.artist_line_edit.setText("")
