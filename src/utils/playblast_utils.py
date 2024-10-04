@@ -51,31 +51,22 @@ def create_png_sequence(dir_path, file_name, width, height, camera_name, start_t
         return ""
     print(f"This is the active vp :{active_vp}")
 
-    # Store the current camera
-    current_camera = cmds.modelEditor(active_vp, query=True, camera=True)
-
-    # Set the camera for the active viewport
-    cmds.modelEditor(active_vp, edit=True, camera=camera_name)
-
-
-    playblast_path = cmds.playblast(
-        format='image',          # Output format: 'avi', 'qt', 'movie', etc.
-        filename=full_file_name, # Output file path
-        compression='png',       # Compression type: 'none', 'avi', 'h264', etc.
-        percent= 100,            # Percentage of current view size to use during blasting.
-        quality= 100,            # Specify the compression quality factor to use for the movie file
-        clearCache=True,         # Clear the cache before the playblast
-        viewer=False,            # Do not show the playblast in the viewer
-        showOrnaments=False,     # Hide UI elements
-        forceOverwrite=True,     # Overwrite existing file
-        framePadding=4,          # Number of digits in the frame number
-        startTime=start_time,    # Start frame
-        endTime=end_time,        # End frame
-        widthHeight=(width, height)  # Resolution of the playblast
-    )
-
-    # Return to the initial camera view
-    cmds.modelEditor(active_vp, edit=True, camera=current_camera)
+    with ChangeViewportCamera(active_vp, camera_name):
+        playblast_path = cmds.playblast(
+            format='image',          # Output format: 'avi', 'qt', 'movie', etc.
+            filename=full_file_name, # Output file path
+            compression='png',       # Compression type: 'none', 'avi', 'h264', etc.
+            percent= 100,            # Percentage of current view size to use during blasting.
+            quality= 100,            # Specify the compression quality factor to use for the movie file
+            clearCache=True,         # Clear the cache before the playblast
+            viewer=False,            # Do not show the playblast in the viewer
+            showOrnaments=False,     # Hide UI elements
+            forceOverwrite=True,     # Overwrite existing file
+            framePadding=4,          # Number of digits in the frame number
+            startTime=start_time,    # Start frame
+            endTime=end_time,        # End frame
+            widthHeight=(width, height)  # Resolution of the playblast
+        )
 
     return playblast_path
 
@@ -104,3 +95,24 @@ def format_sequence_path(playblast_path):
 
 
     return formatted_path
+
+
+class ChangeViewportCamera:
+    def __init__(self, viewport, new_camera):
+        self.viewport = viewport
+        self.new_camera = new_camera
+        self.current_camera = None
+
+    def __enter__(self):
+        print(f"Changing to new camera: {self.new_camera}")
+        # Store the current camera
+        self.current_camera = cmds.modelEditor(self.viewport, query=True, camera=True)
+
+        # Set the camera for the active viewport
+        cmds.modelEditor(self.viewport, edit=True, camera=self.new_camera)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.current_camera:
+            print(f"Changing back to original camera: {self.current_camera}")
+            # Return to the initial camera view
+            cmds.modelEditor(self.viewport, edit=True, camera=self.current_camera)
