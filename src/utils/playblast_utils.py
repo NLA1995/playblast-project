@@ -14,8 +14,6 @@ def get_active_viewport():
     # Check if the active panel is a model editor
     if cmds.modelEditor(active_panel, exists=True):
         return active_panel
-    else:
-        return None
 
 def create_png_sequence(dir_path, file_name, width, height, camera_name, start_time=None, end_time=None):
 
