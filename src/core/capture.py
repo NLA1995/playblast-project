@@ -50,6 +50,8 @@ class PlayblastManager:
         company_name = company_name
 
         png_sequence = create_png_sequence(temp_dir_name, file_name,  width, height, camera_name, start_frame, end_frame)
+        if png_sequence == "":
+            return
 
         format_path = format_sequence_path(png_sequence)
 

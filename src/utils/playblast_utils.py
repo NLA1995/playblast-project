@@ -10,10 +10,13 @@ def get_active_viewport():
     """
     # Get the active panel
     active_panel = cmds.getPanel(withFocus=True)
+    print(f"this is the active panel {active_panel}")
 
     # Check if the active panel is a model editor
     if cmds.modelEditor(active_panel, exists=True):
+        active_panel = active_panel.rstrip("|")
         return active_panel
+
 
 def create_png_sequence(dir_path, file_name, width, height, camera_name, start_time=None, end_time=None):
 
@@ -30,7 +33,7 @@ def create_png_sequence(dir_path, file_name, width, height, camera_name, start_t
         end_time (int): The end point in timeline where export ends
 
     Returns:
-         str: The path to the image sequence
+         str: The path to the image sequence or empty string to catch no active viewport.
     """
 
     # get the last frame of the timeline
@@ -43,13 +46,13 @@ def create_png_sequence(dir_path, file_name, width, height, camera_name, start_t
 
     full_file_name = os.path.join(dir_path, file_name.replace(" ", ""))
     active_vp = get_active_viewport()
+    if active_vp is None:
+        cmds.warning("Could not get active viewport. Please select a viewport.")
+        return ""
+    print(f"This is the active vp :{active_vp}")
 
     # Store the current camera
     current_camera = cmds.modelEditor(active_vp, query=True, camera=True)
-
-    print(f"this is the active vp :{active_vp}")
-    if active_vp != None:
-        active_vp = active_vp.rstrip("|")
 
     # Set the camera for the active viewport
     cmds.modelEditor(active_vp, edit=True, camera=camera_name)
