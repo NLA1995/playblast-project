@@ -20,9 +20,10 @@ class PlayblastManager:
 
         self.debug = debug
 
-    def do_playblast(self, dir_name, file_name, width, height, frame_rate, start_frame, end_frame, artist_name, department_name, company_name):
+    def do_playblast(self, dir_name, file_name, width, height, camera_name, frame_rate, start_frame, end_frame, artist_name, department_name, company_name):
 
-        """This function creates a playblast in Maya's viewport and outputs a video
+        """
+        This function creates a playblast in Maya's viewport and outputs a video
 
         Args:
             dir_name (str) : The folder where the video with watermarks will be stored
@@ -48,7 +49,9 @@ class PlayblastManager:
         department_name = department_name
         company_name = company_name
 
-        png_sequence = create_png_sequence(temp_dir_name, file_name, width, height, start_frame, end_frame)
+        png_sequence = create_png_sequence(temp_dir_name, file_name,  width, height, camera_name, start_frame, end_frame)
+        if png_sequence == "":
+            return
 
         format_path = format_sequence_path(png_sequence)
 

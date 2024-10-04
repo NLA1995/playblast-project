@@ -2,20 +2,38 @@ import maya.cmds as cmds
 import os
 
 
-def create_png_sequence(dir_path, file_name, width, height, start_time=None, end_time=None):
+def get_active_viewport():
+    """
+    This function gets the active viewport
+    Returns (str):name of the active viewport
 
-    """ This function creates a sequences of png images based on the input of the user
+    """
+    # Get the active panel
+    active_panel = cmds.getPanel(withFocus=True)
+    print(f"this is the active panel {active_panel}")
+
+    # Check if the active panel is a model editor
+    if cmds.modelEditor(active_panel, exists=True):
+        active_panel = active_panel.rstrip("|")
+        return active_panel
+
+
+def create_png_sequence(dir_path, file_name, width, height, camera_name, start_time=None, end_time=None):
+
+    """
+    This function creates a sequences of png images based on the input of the user
     Args:
 
         dir_path (str): The path to the folder you want to store your pngs in
         file_name (str): The name of the file for each png
         width (int): The horizontal size of the image
         height (int): The vertical size of the image
+        camera_name(str): The name of the camera you want the playblast of
         start_time (int): The start point from timeline where export begins
         end_time (int): The end point in timeline where export ends
 
     Returns:
-         str: The path to the image sequence
+         str: The path to the image sequence or empty string to catch no active viewport.
     """
 
     # get the last frame of the timeline
@@ -27,6 +45,18 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
         start_time = cmds.playbackOptions(query=True, minTime=True)
 
     full_file_name = os.path.join(dir_path, file_name.replace(" ", ""))
+    active_vp = get_active_viewport()
+    if active_vp is None:
+        cmds.warning("Could not get active viewport. Please select a viewport.")
+        return ""
+    print(f"This is the active vp :{active_vp}")
+
+    # Store the current camera
+    current_camera = cmds.modelEditor(active_vp, query=True, camera=True)
+
+    # Set the camera for the active viewport
+    cmds.modelEditor(active_vp, edit=True, camera=camera_name)
+
 
     playblast_path = cmds.playblast(
         format='image',          # Output format: 'avi', 'qt', 'movie', etc.
@@ -44,11 +74,15 @@ def create_png_sequence(dir_path, file_name, width, height, start_time=None, end
         widthHeight=(width, height)  # Resolution of the playblast
     )
 
+    # Return to the initial camera view
+    cmds.modelEditor(active_vp, edit=True, camera=current_camera)
+
     return playblast_path
 
 def format_sequence_path(playblast_path):
 
-    """This is a function that exchanges the #### given by maya into a format ffmpeg can manage
+    """
+    This is a function that exchanges the #### given by maya into a format ffmpeg can manage
 
     Args:
         playblast_path (str): The path where the image sequence lives
