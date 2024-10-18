@@ -1,5 +1,4 @@
 from PySide6.QtWidgets import QApplication, QWidget, QFormLayout, QLabel, QLineEdit, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QFileDialog, QComboBox
-import maya.cmds as cmds
 from PySide6.QtGui import QValidator, QIcon
 from PySide6.QtCore import QSize
 from core.capture import PlayblastManager
@@ -7,7 +6,6 @@ from shiboken6 import wrapInstance
 from maya import OpenMayaUI
 import maya.cmds as cmds
 from os.path import join, dirname, isdir
-import maya.app.general.createImageFormats as createImageFormats
 
 # Define repository path via environment variable
 icon_path = dirname(dirname(__file__))
