@@ -1,8 +1,8 @@
-from PySide6.QtWidgets import QApplication, QWidget, QFormLayout, QLabel, QLineEdit, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QFileDialog, QComboBox
-from PySide6.QtGui import QValidator, QIcon
-from PySide6.QtCore import QSize
+from Qt.QtWidgets import QApplication, QWidget, QFormLayout, QLabel, QLineEdit, QHBoxLayout, QVBoxLayout, QPushButton, QMainWindow, QFileDialog, QComboBox
+from Qt.QtGui import QValidator, QIcon
+from Qt.QtCore import QSize
 from core.capture import PlayblastManager
-from shiboken6 import wrapInstance
+from Qt.QtCompat import wrapInstance
 from maya import OpenMayaUI
 import maya.cmds as cmds
 from os.path import join, dirname, isdir
@@ -10,6 +10,7 @@ from os.path import join, dirname, isdir
 # Define repository path via environment variable
 icon_path = dirname(dirname(__file__))
 ICON = join(icon_path, "ui", "folder.png")
+
 
 def get_maya_window():
     """
@@ -20,6 +21,7 @@ def get_maya_window():
     """
     main_window_ptr = OpenMayaUI.MQtUtil.mainWindow()
     return wrapInstance(int(main_window_ptr), QWidget)
+
 
 class IntegerValidator(QValidator):
     def validate(self, input_text, pos):
