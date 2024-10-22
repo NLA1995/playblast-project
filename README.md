@@ -1,9 +1,10 @@
 This tool enables you to create highly personalized playblasts, allowing you to display 
 important information about the shot. You can include details such as the artist's name, 
-company name, timestamp, and department.
+company name, frame count, and department.
 
 #COPY THIS ENTIRE TOOL FOLDER INTO YOUR MAYA SCRIPT'S FOLDER
-#PASTE THE FOLLOWING COMMAND INTO A PYTHON TAB INSIDE SCRIPT EDITOR 
+#PASTE THE FOLLOWING COMMAND INTO A PYTHON TAB INSIDE SCRIPT EDITOR
+#CHANGE "YOUREQUIPMENTNAME" FOR YOUR EQUPMENT'S NAME
 #THEN WITH THE MIDDLE MOUSE DRAG IT TO YOUR CUSTOM SHELF
 
 
